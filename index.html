@@ -14,6 +14,7 @@
 
 	<!-- CSS
   ================================================== -->
+  <link href='http://fonts.googleapis.com/css?family=PT+Serif:400,700' rel='stylesheet' type='text/css'>
 	<link type="text/css" rel="stylesheet" media="screen" href="stylesheets/baseline/css/uncompressed/baseline.reset.css">
   <link type="text/css" rel="stylesheet" media="screen" href="stylesheets/baseline/css/uncompressed/baseline.base.css">
   <link type="text/css" rel="stylesheet" media="screen" href="stylesheets/baseline/css/uncompressed/baseline.type.css">
@@ -110,6 +111,9 @@
             //console.log('complete', xhr, textStatus);
           },
           success: function(favs, textStatus, xhr) {
+            $(favs).each(function(idx, fav) {
+              this.fav_of = data[i].username;
+            });
             favorites = favorites.concat(favs);
             followcount--;
             if (followcount<=0) {
@@ -139,9 +143,14 @@
     }
     
     function playerTemplate(track, idx){
+      //TODO fav_of einbringen, schön layouten
+      //TODO spinner bis player loaded, dann autostart
+      //TODO player an baseline anpassen
+      //TODO reload
       console.log("returning template for ",track);
-      var playerHTML = '<object id="track'+idx+'" height="81" width="100%">  <param name="movie" value="http://player.soundcloud.com/player.swf?object_id=track'+idx+'&enable_api=true&download=false&buying=false&color=000000&show_comments=false&show_user=true&url='+track.permalink_url+'"></param>  <param name="allowscriptaccess" value="always"></param>  <embed     src="http://player.soundcloud.com/player.swf?object_id=track'+idx+'&enable_api=true&download=false&buying=false&color=000000&show_comments=false&show_user=true&url='+track.permalink_url+'"&allowscriptaccess="always" height="81" type="application/x-shockwave-flash" width="100%" name="track'+idx+'"></embed></object>';
-      return playerHTML;
+      var playerHTML = '<object id="track'+idx+'" height="83.5em" width="100%">  <param name="movie" value="http://player.soundcloud.com/player.swf?object_id=track'+idx+'&enable_api=true&download=false&buying=false&color=000000&show_comments=false&show_user=true&url='+track.permalink_url+'"></param>  <param name="allowscriptaccess" value="always"></param>  <embed     src="http://player.soundcloud.com/player.swf?object_id=track'+idx+'&enable_api=true&download=false&buying=false&color=000000&show_comments=false&show_user=true&url='+track.permalink_url+'"&allowscriptaccess="always" height="83.5em" type="application/x-shockwave-flash" width="100%" name="track'+idx+'"></embed></object>';
+      var div = "<section class='column width2'><p class='track_description'>"+track.title.toUpperCase()+"</p><p>faved by "+track.fav_of+"</p><br/>"+playerHTML+"</section>";
+      return div;
     }
     
     // MAKE A RANDOM PLAYLIST from THE FAVORITE TRACKS of all the ppl you follow.

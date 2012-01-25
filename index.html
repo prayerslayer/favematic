@@ -8,67 +8,62 @@
 	<!-- Basic Page Needs
   ================================================== -->
 	<meta charset="utf-8">
-	<title>soundcloud api hacking</title>
+	<title>soundcloud awesomeness</title>
 	<meta name="description" content="">
 	<meta name="author" content="">
-	<!--[if lt IE 9]>
-		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-	<![endif]-->
-
-	<!-- Mobile Specific Metas
-  ================================================== -->
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 	<!-- CSS
   ================================================== -->
-	<link rel="stylesheet" href="stylesheets/base.css">
-	<link rel="stylesheet" href="stylesheets/skeleton.css">
-	<link rel="stylesheet" href="stylesheets/layout.css">
-
-	<!-- Favicons
-	================================================== -->
-	<link rel="shortcut icon" href="images/favicon.ico">
-	<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
-	<link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
-	<link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
-
+	<link type="text/css" rel="stylesheet" media="screen" href="stylesheets/baseline/css/uncompressed/baseline.reset.css">
+  <link type="text/css" rel="stylesheet" media="screen" href="stylesheets/baseline/css/uncompressed/baseline.base.css">
+  <link type="text/css" rel="stylesheet" media="screen" href="stylesheets/baseline/css/uncompressed/baseline.type.css">
+  <link type="text/css" rel="stylesheet" media="screen" href="stylesheets/baseline/css/uncompressed/baseline.table.css">
+  <link type="text/css" rel="stylesheet" media="screen" href="stylesheets/baseline/css/uncompressed/baseline.form.css">
+  <link type="text/css" rel="stylesheet" media="screen" href="stylesheets/baseline/css/uncompressed/baseline.grid.css">
+  <link rel="stylesheet" href="stylesheets/sc-player-minimal.css" type="text/css">
+  
 </head>
 <body>
 
 
-
-	<!-- Primary Page Layout
-	================================================== -->
-
-	<!-- Delete everything in this .container and get started on your own site! -->
-
-	<div class="container">
-		<div class="sixteen columns" style="margin-top:40px">
-			<h4>1st track from every person i follow's fav's list</h4>
-			<h2 id="username"></h2>
-			<div id="stuff"></div>
-		</div>
-		
-
-
-	</div><!-- container -->
+	<section class="width4">
+    <h2>favorites from your followings</h2>
+    <section class="column width3 first">
+      <div id="playlist">
+        <img id="spinner" src="images/spinner.gif"/>
+      </div>
+    </section>
+    <aside class="column width1">
+      <p>orem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisis justo dictum justo accumsan pretium. VestibulLorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisis justo dictum justo accumsan pretium. VestibulLorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisis justo dictum justo accumsan pretium. VestibulLorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisis justo dictum justo accumsan pretium. VestibulLorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisis justo dictum justo accumsan pretium. Vestibul</p>
+    </aside>
+  </section>
 
 
 
 	<!-- JS
 	================================================== -->
 	<script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
+  <script type="text/javascript" src="javascripts/soundcloud.player.api.js"></script>
+  <script type="text/javascript" src="javascripts/sc-player.js"></script>
 	<script src="javascripts/tabs.js"></script>
 	<script type="text/javascript" charset="utf-8">
-	  $(function(){
-	    
-      var curUserId = '7787606'; //alanna-scott
+    var favorites = new Array();
+    var curUserId = 'prayerslayer'; //me
+    $.scPlayer.defaults.onDomReady = null;
+	  $(document).ready(function() {
       getUserFollowings(curUserId);
-      
-      
-    
     });
     
+    //fisher yates shuffling
+    function shuffle(sourceArray) {
+      for (var n = 0; n < sourceArray.length - 1; n++) {
+          var k = n + Math.floor(Math.random() * (sourceArray.length - n));
+
+          var temp = sourceArray[k];
+          sourceArray[k] = sourceArray[n];
+          sourceArray[n] = temp;
+      }
+    } 
     
     function getUserFollowings(curUserId){
       $.ajax({
@@ -89,9 +84,8 @@
     }
     
     function getFollowersFavs(data){
-      $.each(data, function(i, val){
-        //console.log(i, val);
-        
+      var followcount = data.length;
+      $.each(data, function(i, val){        
         var followerid = data[i].id;
         $.ajax({
           url: 'https://api.soundcloud.com/users/'+followerid+'/favorites.json?client_id=956307a721999662072e3d9978287449',
@@ -100,10 +94,19 @@
           complete: function(xhr, textStatus) {
             //console.log('complete', xhr, textStatus);
           },
-          success: function(data, textStatus, xhr) {
-            //console.log('success', data, textStatus, xhr);
-            if(data.length > 0) {
-              getFavTrack(data);
+          success: function(favs, textStatus, xhr) {
+            favorites = favorites.concat(favs);
+            followcount--;
+            if (followcount<=0) {
+              //TODO remove duplicates
+              shuffle(favorites);
+              favorites = favorites.slice(0,24);
+              $(favorites).each(function(idx, fav) {
+                $("#playlist").append(playerTemplate(fav));
+              });
+              $("#spinner").hide();
+              $("#playlist > div.track > a").scPlayer();
+              console.log("playlist ready");
             }
           },
           error: function(xhr, textStatus, errorThrown) {
@@ -120,17 +123,9 @@
 
     }
     
-    function getFavTrack(data){
-      console.log(data[0]);
-      //$("#stuff").append(playerTemplate(data[0].id));
-      var s = '<audio controls="controls" width="100%"><source src="https://api.soundcloud.com/tracks/'+data[0].id+'/stream?client_id=956307a721999662072e3d9978287449" /></audio>'
-      $("#stuff").append(s);
-      
-      //https://api.soundcloud.com/tracks/{track_id}/stream?client_id=956307a721999662072e3d9978287449
-    }
-    
-    function playerTemplate(id){
-      var playerHTML = '<div class="five columns"><object height="81" width="100%"> <param name="movie" value="http://api.soundcloud.com/tracks/'+id+'&amp;show_comments=false&amp;auto_play=false&amp;color=e6d400"></param> <param name="allowscriptaccess" value="always"></param> <embed allowscriptaccess="always" height="81" src="http://player.soundcloud.com/player.swf?url=http://api.soundcloud.com/tracks/'+id+'&amp;show_comments=false&amp;auto_play=false&amp;color=e6d400" type="application/x-shockwave-flash" width="100%"></embed> </object></div>';
+    function playerTemplate(track){
+      console.log("returning template for ",track);
+      var playerHTML = '<div class="track"><a href="'+track.permalink_url+'">'+track.title+' by '+track.user.username+'</a></div>';
       return playerHTML;
     }
     
@@ -152,10 +147,12 @@
     
     
 	</script>
-	
+
+
 	
 
 <!-- End Document
 ================================================== -->
+  
 </body>
 </html>

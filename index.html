@@ -21,6 +21,7 @@
   <link type="text/css" rel="stylesheet" media="screen" href="stylesheets/baseline/css/uncompressed/baseline.form.css">
   <link type="text/css" rel="stylesheet" media="screen" href="stylesheets/baseline/css/uncompressed/baseline.grid.css">
   <link rel="stylesheet" href="stylesheets/sc-player-minimal.css" type="text/css">
+  <link rel="stylesheet" href="stylesheets/style.css">
   
 </head>
 <body>
@@ -48,10 +49,23 @@
 	<script src="javascripts/tabs.js"></script>
 	<script type="text/javascript" charset="utf-8">
     var favorites = new Array();
+    var max_tracks = 10;
     var curUserId = 'prayerslayer'; //me
     $.scPlayer.defaults.onDomReady = null;
 	  $(document).ready(function() {
+      $(document).bind('soundcloud:onMediaEnd', function(player, data) {
+        console.log("media end");
+        var player_id = player.target.name;
+        var number = parseInt(player_id.slice(5,player_id.length));
+        if (!(number=== max_tracks-1)) { 
+          //we're not finished
+          console.log("next track");
+          var next = number+1;
+          soundcloud.getPlayer("track"+next+"").api_play();
+        }
+      });
       getUserFollowings(curUserId);
+
     });
     
     //fisher yates shuffling
@@ -100,12 +114,12 @@
             if (followcount<=0) {
               //TODO remove duplicates
               shuffle(favorites);
-              favorites = favorites.slice(0,24);
+              favorites = favorites.slice(0,Math.min(max_tracks, favorites.length));
               $(favorites).each(function(idx, fav) {
-                $("#playlist").append(playerTemplate(fav));
+                $("#playlist").append(playerTemplate(fav, idx));
               });
-              $("#spinner").hide();
-              $("#playlist > div.track > a").scPlayer();
+             
+               $("#spinner").hide();
               console.log("playlist ready");
             }
           },
@@ -123,9 +137,9 @@
 
     }
     
-    function playerTemplate(track){
+    function playerTemplate(track, idx){
       console.log("returning template for ",track);
-      var playerHTML = '<div class="track"><a href="'+track.permalink_url+'">'+track.title+' by '+track.user.username+'</a></div>';
+      var playerHTML = '<object id="track'+idx+'" height="81" width="100%">  <param name="movie" value="http://player.soundcloud.com/player.swf?object_id=track'+idx+'&enable_api=true&download=false&buying=false&color=000000&show_comments=false&show_user=true&url='+track.permalink_url+'"></param>  <param name="allowscriptaccess" value="always"></param>  <embed     src="http://player.soundcloud.com/player.swf?object_id=track'+idx+'&enable_api=true&download=false&buying=false&color=000000&show_comments=false&show_user=true&url='+track.permalink_url+'"&allowscriptaccess="always" height="81" type="application/x-shockwave-flash" width="100%" name="track'+idx+'"></embed></object>';
       return playerHTML;
     }
     

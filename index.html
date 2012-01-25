@@ -4,9 +4,6 @@
 <!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
 <!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
 <head>
-
-	<!-- Basic Page Needs
-  ================================================== -->
 	<meta charset="utf-8">
 	<title>soundcloud awesomeness</title>
 	<meta name="description" content="">
@@ -24,12 +21,17 @@
   <link rel="stylesheet" href="stylesheets/sc-player-minimal.css" type="text/css">
   <link rel="stylesheet" href="stylesheets/style.css">
   
+  <!-- JS
+  ===================================================  -->
+  <script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
+  <script type="text/javascript" src="javascripts/soundcloud.player.api.js"></script>
+  <script type="text/javascript" src="javascripts/code.js"></script>
 </head>
 <body>
 
 
 	<section class="width4">
-    <h2>favorites from your followings</h2>
+    <h2>Favorings of your Followings</h2>
     <section class="column width3 first">
       <div id="playlist">
         <img id="spinner" src="images/spinner.gif"/>
@@ -39,144 +41,6 @@
       <p>orem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisis justo dictum justo accumsan pretium. VestibulLorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisis justo dictum justo accumsan pretium. VestibulLorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisis justo dictum justo accumsan pretium. VestibulLorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisis justo dictum justo accumsan pretium. VestibulLorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisis justo dictum justo accumsan pretium. Vestibul</p>
     </aside>
   </section>
-
-
-
-	<!-- JS
-	================================================== -->
-	<script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
-  <script type="text/javascript" src="javascripts/soundcloud.player.api.js"></script>
-  <script type="text/javascript" src="javascripts/sc-player.js"></script>
-	<script src="javascripts/tabs.js"></script>
-	<script type="text/javascript" charset="utf-8">
-    var favorites = new Array();
-    var max_tracks = 10;
-    var curUserId = 'prayerslayer'; //me
-    $.scPlayer.defaults.onDomReady = null;
-	  $(document).ready(function() {
-      $(document).bind('soundcloud:onMediaEnd', function(player, data) {
-        console.log("media end");
-        var player_id = player.target.name;
-        var number = parseInt(player_id.slice(5,player_id.length));
-        if (!(number=== max_tracks-1)) { 
-          //we're not finished
-          //test comment
-          console.log("next track");
-          var next = number+1;
-          soundcloud.getPlayer("track"+next+"").api_play();
-        }
-      });
-      getUserFollowings(curUserId);
-
-    });
-    
-    //fisher yates shuffling
-    function shuffle(sourceArray) {
-      for (var n = 0; n < sourceArray.length - 1; n++) {
-          var k = n + Math.floor(Math.random() * (sourceArray.length - n));
-
-          var temp = sourceArray[k];
-          sourceArray[k] = sourceArray[n];
-          sourceArray[n] = temp;
-      }
-    } 
-    
-    function getUserFollowings(curUserId){
-      $.ajax({
-        url: 'https://api.soundcloud.com/users/'+curUserId+'/followings.json?client_id=956307a721999662072e3d9978287449',
-        type: 'GET',
-        dataType: 'json',
-        complete: function(xhr, textStatus) {
-          //console.log('complete', xhr, textStatus);
-        },
-        success: function(data, textStatus, xhr) {
-          //console.log('success', data, textStatus, xhr);
-          getFollowersFavs(data);
-        },
-        error: function(xhr, textStatus, errorThrown) {
-          //console.log('error', xhr, textStatus, errorThrown);
-        }
-      });
-    }
-    
-    function getFollowersFavs(data){
-      var followcount = data.length;
-      $.each(data, function(i, val){        
-        var followerid = data[i].id;
-        $.ajax({
-          url: 'https://api.soundcloud.com/users/'+followerid+'/favorites.json?client_id=956307a721999662072e3d9978287449',
-          type: 'GET',
-          dataType: 'json',
-          complete: function(xhr, textStatus) {
-            //console.log('complete', xhr, textStatus);
-          },
-          success: function(favs, textStatus, xhr) {
-            $(favs).each(function(idx, fav) {
-              this.fav_of = data[i].username;
-            });
-            favorites = favorites.concat(favs);
-            followcount--;
-            if (followcount<=0) {
-              //TODO remove duplicates
-              shuffle(favorites);
-              favorites = favorites.slice(0,Math.min(max_tracks, favorites.length));
-              $(favorites).each(function(idx, fav) {
-                $("#playlist").append(playerTemplate(fav, idx));
-              });
-             
-               $("#spinner").hide();
-              console.log("playlist ready");
-            }
-          },
-          error: function(xhr, textStatus, errorThrown) {
-            //console.log('error', xhr, textStatus, errorThrown);
-          }
-        });
-        //var rand = Math.floor(Math.random()*len);      
-        //console.log(data[rand].followings_count);
-
-      });
-      
-      
-      
-
-    }
-    
-    function playerTemplate(track, idx){
-      //TODO fav_of einbringen, schön layouten
-      //TODO spinner bis player loaded, dann autostart
-      //TODO player an baseline anpassen
-      //TODO reload
-      console.log("returning template for ",track);
-      var playerHTML = '<object id="track'+idx+'" height="83.5em" width="100%">  <param name="movie" value="http://player.soundcloud.com/player.swf?object_id=track'+idx+'&enable_api=true&download=false&buying=false&color=000000&show_comments=false&show_user=true&url='+track.permalink_url+'"></param>  <param name="allowscriptaccess" value="always"></param>  <embed     src="http://player.soundcloud.com/player.swf?object_id=track'+idx+'&enable_api=true&download=false&buying=false&color=000000&show_comments=false&show_user=true&url='+track.permalink_url+'"&allowscriptaccess="always" height="83.5em" type="application/x-shockwave-flash" width="100%" name="track'+idx+'"></embed></object>';
-      var div = "<section class='column width2'><p class='track_description'>"+track.title.toUpperCase()+"</p><p>faved by "+track.fav_of+"</p><br/>"+playerHTML+"</section>";
-      return div;
-    }
-    
-    // MAKE A RANDOM PLAYLIST from THE FAVORITE TRACKS of all the ppl you follow.
-    // 
-    //    logged in user id var userid = '7787606';
-    // 
-    //    get list of followers //https://api.soundcloud.com/users/{user-id}/followings.json
-    //      get 25 random numbers from 0 to followers.length
-    //        foreach follower 0-24  get list of favorites
-    //        choose random # track from favorites
-    //        add track id to array
-    //      return list of track id's.
-
-
-
-
-
-    
-    
-	</script>
-
-
-	
-
-<!-- End Document
-================================================== -->
   
 </body>
 </html>

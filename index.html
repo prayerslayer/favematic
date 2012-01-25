@@ -59,6 +59,7 @@
         var number = parseInt(player_id.slice(5,player_id.length));
         if (!(number=== max_tracks-1)) { 
           //we're not finished
+          //test comment
           console.log("next track");
           var next = number+1;
           soundcloud.getPlayer("track"+next+"").api_play();

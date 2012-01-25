@@ -10,3 +10,20 @@ h1,h2,h3,h4 {
 .track_description {
 	text-transform: uppercase;
 }
+
+.track {
+	border-left: 1px solid gray;
+	padding-left: 1em;
+}
+
+.playing {
+	border-left: 1px solid orange;
+}
+
+#login:hover {
+	cursor:pointer;
+}
+
+#spinner, #disconnect {
+	display:none;
+}

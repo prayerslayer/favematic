@@ -5,7 +5,7 @@
 <!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
 <head>
 	<meta charset="utf-8">
-	<title>soundcloud awesomeness</title>
+	<title>Followings & Favorites</title>
 	<meta name="description" content="">
 	<meta name="author" content="">
 
@@ -24,6 +24,8 @@
   <!-- JS
   ===================================================  -->
   <script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
+  <script src="http://connect.soundcloud.com/2/latest.min.js"></script>
+  <script src="http://connect.soundcloud.com/sdk.js" type="text/JavaScript"></script>
   <script type="text/javascript" src="javascripts/soundcloud.player.api.js"></script>
   <script type="text/javascript" src="javascripts/code.js"></script>
 </head>
@@ -31,14 +33,20 @@
 
 
 	<section class="width4">
-    <h2>Favorings of your Followings</h2>
+    <h2>Followings & Favorites</h2>
     <section class="column width3 first">
       <div id="playlist">
-        <img id="spinner" src="images/spinner.gif"/>
+        <img id="spinner" src="images/spinner.gif" />
       </div>
     </section>
     <aside class="column width1">
-      <p>orem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisis justo dictum justo accumsan pretium. VestibulLorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisis justo dictum justo accumsan pretium. VestibulLorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisis justo dictum justo accumsan pretium. VestibulLorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisis justo dictum justo accumsan pretium. VestibulLorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla facilisis justo dictum justo accumsan pretium. Vestibul</p>
+      <div id="login">
+        <img id="connect" src="http://connect.soundcloud.com/2/btn-connect-s.png" alt="Login via Soundcloud"/>
+        <img id="disconnect" src="http://connect.soundcloud.com/2/btn-disconnect-s.png" alt="Disconnect"/>
+      </div>
+      <p>
+        Use the button above to connect to SoundCloud. Enjoy the playlist of your followings' favorites then.
+      </p>
     </aside>
   </section>
   

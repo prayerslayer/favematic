@@ -41,21 +41,16 @@ if (param_idx>0 &&  window.location.href.slice(window.location.href.indexOf('?')
 			token = a.access_token;
 			SC.accessToken(token);
 			console.log(token);
-			$.ajax({
-				"type": "GET",
-				"dataType": "JSON",
-				"url": "https://api.soundcloud.com/me?oauth_token="+token,
-				success: function(me, type, xhr) {
-					curUserId = me.id;
-					$("#login_msg").hide();
-					$("#next").show();
-					$("#playlist").show();
-					$("#connect").hide();
-					$("#disconnect").show();
-					bindToSCEvents();
-					getUserFollowings(curUserId);
-				}
-			})
+			SC.get("/me", function(me) {
+				curUserId = me.id;
+				$("#login_msg").hide();
+				$("#next").show();
+				$("#playlist").show();
+				$("#connect").hide();
+				$("#disconnect").show();
+				bindToSCEvents();
+				getUserFollowings(curUserId);
+			});
 		}
 	});
 }
@@ -146,20 +141,8 @@ function shuffle(sourceArray) {
 
 function getUserFollowings(curUserId){
 	$("#spinner").show();
-	$.ajax({
-		url: 'https://api.soundcloud.com/users/'+curUserId+'/followings.json?client_id='+client_id,
-		type: 'GET',
-		dataType: 'json',
-		complete: function(xhr, textStatus) {
-			//console.log('complete', xhr, textStatus);
-		},
-		success: function(data, textStatus, xhr) {
-			//console.log('success', data, textStatus, xhr);
-			getFollowersFavs(data);
-		},
-		error: function(xhr, textStatus, errorThrown) {
-			//console.log('error', xhr, textStatus, errorThrown);
-		}
+	SC.get("/me/followings", function(data) {
+		getFollowersFavs(data);
 	});
 }
 
@@ -167,28 +150,14 @@ function getFollowersFavs(data){
 	var followcount = data.length;
 	$.each(data, function(i, val){        
 		var followerid = data[i].id;
-		$.ajax({
-			url: 'https://api.soundcloud.com/users/'+followerid+'/favorites.json?client_id='+client_id,
-			type: 'GET',
-			dataType: 'json',
-			complete: function(xhr, textStatus) {
-				//console.log('complete', xhr, textStatus);
-			},
-			success: function(favs, textStatus, xhr) {
-				$(favs).each(function(idx, fav) {
-					this.fav_of = data[i].username;
-				});
-				favorites = favorites.concat(favs);
-				followcount--;
-				if (followcount<=0)
-					initPlaylists();
-			},
-			error: function(xhr, textStatus, errorThrown) {
-				console.log('error', xhr, textStatus, errorThrown);
-				followcount--;
-				if (followcount<=0)
-					initPlaylists();
-			}
+		SC.get("/users/"+followerid+"/favorites", function(favs) {
+			$(favs).each(function(idx, fav) {
+				this.fav_of = data[i].username;
+			});
+			favorites = favorites.concat(favs);
+			followcount--;
+			if (followcount<=0)
+				initPlaylists();
 		});
 	});
 }
@@ -235,7 +204,7 @@ function next() {
 }
 
 function playerTemplate(track, idx){
-	var playerHTML = '<object id="track'+idx+'" height="83.5em" width="100%" classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000">  <param name="movie" value="http://player.soundcloud.com/player.swf?object_id=track'+idx+'&enable_api=true&buying=false&color=000000&show_comments=false&show_user=true&url='+track.permalink_url+'"></param>  <param name="allowscriptaccess" value="always"></param>  <embed     src="http://player.soundcloud.com/player.swf?object_id=track'+idx+'&enable_api=true&buying=false&color=000000&show_comments=false&show_user=true&url='+track.permalink_url+'"&allowscriptaccess="always" height="83.5em" type="application/x-shockwave-flash" width="100%" name="track'+idx+'"></embed></object>';
+	var playerHTML = '<object id="track'+idx+'" height="83.5em" width="100%">  <param name="movie" value="http://player.soundcloud.com/player.swf?object_id=track'+idx+'&enable_api=true&buying=false&color=000000&show_comments=false&show_user=true&url='+track.permalink_url+'"></param>  <param name="allowscriptaccess" value="always"></param>  <embed     src="http://player.soundcloud.com/player.swf?object_id=track'+idx+'&enable_api=true&buying=false&color=000000&show_comments=false&show_user=true&url='+track.permalink_url+'"&allowscriptaccess="always" height="83.5em" type="application/x-shockwave-flash" width="100%" name="track'+idx+'"></embed></object>';
 	var spinner = "<img src='images/spinner.gif' class='spinner'/>"
 	var div = "<div id='section"+idx+"' class='track'><p class='track_description'>"+track.title+"</p><p>faved by "+track.fav_of+"</p><br/>"+spinner+" "+playerHTML+"</div>";
 	return div;

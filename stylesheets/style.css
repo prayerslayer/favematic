@@ -3,12 +3,47 @@ body {
 	font-weight: 400;
 }
 
+#content {
+	overflow:hidden;
+}
+
 h1,h2,h3,h4 {
-	font-weight: 700;
+	font-family: "PT Serif", Sans-serif;
+	font-weight:700;
+	text-transform: uppercase;
+}
+#next_playlist, #playlist {
+	display: none;
+}
+
+.button {
+	cursor: pointer;
+	opacity:0.7;
+	-moz-opacity: 0.7;
+	filter:alpha(opacity=7);
+}
+
+.button:hover {
+	opacity:1;
+	-moz-opacity: 1;
+	filter:alpha(opacity=1);
+}
+
+#next {
+	position:relative;
+	top: 5.4em;
+	padding-left: 5px;
+	font-size: 1.5em;
+	font-family: "PT Sans";
+	display:none;
+	background-color:black;
+	color:white;
+	text-transform: uppercase;
 }
 
 .track_description {
 	text-transform: uppercase;
+	font-family: "PT Serif", Sans-serif;
 }
 
 .track {

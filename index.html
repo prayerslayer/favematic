@@ -5,20 +5,20 @@
 <!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
 <head>
 	<meta charset="utf-8">
-	<title>Followings & Favorites</title>
+	<title>friends & favs</title>
 	<meta name="description" content="">
 	<meta name="author" content="">
 
 	<!-- CSS
   ================================================== -->
   <link href='http://fonts.googleapis.com/css?family=PT+Serif:400,700' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=PT+Sans' rel='stylesheet' type='text/css'>
 	<link type="text/css" rel="stylesheet" media="screen" href="stylesheets/baseline/css/uncompressed/baseline.reset.css">
   <link type="text/css" rel="stylesheet" media="screen" href="stylesheets/baseline/css/uncompressed/baseline.base.css">
   <link type="text/css" rel="stylesheet" media="screen" href="stylesheets/baseline/css/uncompressed/baseline.type.css">
   <link type="text/css" rel="stylesheet" media="screen" href="stylesheets/baseline/css/uncompressed/baseline.table.css">
   <link type="text/css" rel="stylesheet" media="screen" href="stylesheets/baseline/css/uncompressed/baseline.form.css">
   <link type="text/css" rel="stylesheet" media="screen" href="stylesheets/baseline/css/uncompressed/baseline.grid.css">
-  <link rel="stylesheet" href="stylesheets/sc-player-minimal.css" type="text/css">
   <link rel="stylesheet" href="stylesheets/style.css">
   
   <!-- JS
@@ -32,21 +32,25 @@
 <body>
 
 
-	<section class="width4">
-    <h2>Followings & Favorites</h2>
+	<section class="width4" id="content">
+    <h1>friends & favs</h1>
     <section class="column width3 first">
       <div id="playlist">
-        <img id="spinner" src="images/spinner.gif" />
+        <img class="spinner" src="images/spinner.gif" />
+      </div>
+      <div id="next_playlist">
+        <img class="spinner" src="images/spinner.gif" />
       </div>
     </section>
     <aside class="column width1">
-      <div id="login">
+      <div id="login" class="button">
         <img id="connect" src="http://connect.soundcloud.com/2/btn-connect-s.png" alt="Login via Soundcloud"/>
         <img id="disconnect" src="http://connect.soundcloud.com/2/btn-disconnect-s.png" alt="Disconnect"/>
       </div>
-      <p>
-        Use the button above to connect to SoundCloud. Enjoy the playlist of your followings' favorites then.
+      <p>If you're as lazy as I am, you want other people to create your playlist. Enter friends & favs. Connect with SoundCloud and enjoy a playlist made out of your followings' favorites.</p><br/>
+      <p>This website was created by <a href="http://nikolaus-piccolotto.info">Nikolaus Piccolotto</a> and is loosely based on favematic by <a href="http://www.alannascott.com/portfolio/">Allana Scott</a>. Made with <a href="http://baselinecss.com/">baselinecss</a>, <a href="http://jquery.com/">jQuery</a> and the <a href="http://developer.soundcloud.com">SoundCloud API</a>. Check out the code at <a href="https://github.com/prayerslayer/favematic">GitHub</a>, if you're into it.
       </p>
+      <div id="next" class="button">next chunk &#062;</div>
     </aside>
   </section>
   

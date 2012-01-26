@@ -89,7 +89,7 @@ function bindToSCEvents() {
 		console.log("media end", player, data);
 		var player_id = player.target.name;
 		var number = parseInt(player_id.slice(5,player_id.length));
-		if (!(number=== (offset*max_tracks)-1)) { 
+		if ($("#section"+number).next().length===0) { 
 			//we're not finished
 			soundcloud.getPlayer("track"+number).api_seekTo(0); //rewind
 			soundcloud.getPlayer("track"+$("#section"+number).next().attr("id").substring("section".length)).api_play();

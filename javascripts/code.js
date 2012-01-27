@@ -1,10 +1,3 @@
-//TODO auf duplikate checken
-//TODO bevor beim nächsten track play aufgerufen wird, checken ob der überhaupt bereit ist.
-//TODO statt jquery ajax calls vl SC.put, .get etc benutzen?
-//TODO IE unterstützung
-//TODO FF widget events?
-//TODO eingeloggt neu laden -> keine events von widgets
-
 var favorites = new Array();
 var max_tracks = 10;
 var curUserId = null; //me
@@ -170,6 +163,7 @@ function getFollowersFavs(data){
 		SC.get("/users/"+followerid+"/favorites", function(favs) {
 			$(favs).each(function(idx, fav) {
 				this.fav_of = data[i].username;
+				this.fav_url = data[i].permalink_url;
 			});
 			favorites = favorites.concat(favs);
 			followcount--;
@@ -234,6 +228,6 @@ function playerTemplate(track, idx) {
 function playerTemplate(track, idx){
 	var playerHTML = '<object id="track'+idx+'" height="83.5em" width="100%">  <param name="movie" value="http://player.soundcloud.com/player.swf?object_id=track'+idx+'&enable_api=true&buying=false&color=000000&show_comments=false&show_user=true&url='+track.permalink_url+'"></param>  <param name="allowscriptaccess" value="always"></param>  <embed     src="http://player.soundcloud.com/player.swf?object_id=track'+idx+'&enable_api=true&buying=false&color=000000&show_comments=false&show_user=true&url='+track.permalink_url+'"&allowscriptaccess="always" height="83.5em" type="application/x-shockwave-flash" width="100%" name="track'+idx+'"></embed></object>';
 	var spinner = "<img src='images/spinner.gif' class='spinner'/>"
-	var div = "<div id='section"+idx+"' class='track'><p class='track_description'>"+track.title+"</p><p>faved by <a href='"+track.user.permalink_url+"'>"+track.fav_of+"</a></p><br/>"+spinner+" "+playerHTML+"</div>";
+	var div = "<div id='section"+idx+"' class='track'><p class='track_description'>"+track.title+"</p><p>faved by <a href='"+track.fav_url+"'>"+track.fav_of+"</a></p><br/>"+spinner+" "+playerHTML+"</div>";
 	return div;
 }

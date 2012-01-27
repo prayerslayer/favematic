@@ -88,11 +88,11 @@ function bindToSCEvents() {
 	$(document).bind('soundcloud:onMediaEnd', function(player, data) {
 		console.log("media end", player, data);
 		var player_id = player.target.name;
-		var number = parseInt(player_id.slice(5,player_id.length));
-		if ($("#section"+number).next().length===0) { 
+		var number = parseInt(player_id.slice("track".length,player_id.length));
+		if ($("#section"+number).next().length) { 
 			//we're not finished
-			soundcloud.getPlayer("track"+number).api_seekTo(0); //rewind
 			soundcloud.getPlayer("track"+$("#section"+number).next().attr("id").substring("section".length)).api_play();
+			soundcloud.getPlayer("track"+number).api_seekTo(0); //rewind
 		}
 		else {
 			next(); //switch page

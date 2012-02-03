@@ -8,13 +8,18 @@ body {
 
 }
 
+.hidden {
+	display:none;	
+}
+.error {
+	background-color:red;
+	color:white;
+}
+
 h1,h2,h3,h4 {
 	font-family: "PT Serif", Sans-serif;
 	font-weight:700;
 	text-transform: uppercase;
-}
-#next_playlist, #playlist {
-	display: none;
 }
 
 .button {
@@ -30,16 +35,17 @@ h1,h2,h3,h4 {
 	filter:alpha(opacity=100);
 }
 
-#next {
+#view{
 	position:relative;
-	top: 5.4em;
-	padding-left: 5px;
-	font-size: 1.5em;
-	font-family: "PT Sans";
-	display:none;
-	background-color:black;
-	color:white;
-	text-transform: uppercase;
+	width:100%;
+}
+
+#up, #down {
+	height: 30px;
+	background-color:gray;
+}
+
+#tracks {
 }
 
 .track_description {
@@ -47,17 +53,12 @@ h1,h2,h3,h4 {
 	font-family: "PT Serif", Sans-serif;
 }
 
-.track {
-	border-left: 1px solid gray;
-	padding-left: 1em;
+.favorite {
+
 }
 
 .playing {
-	border-left: 1px solid orange;
-}
 
-#login:hover {
-	cursor:pointer;
 }
 
 #spinner, #disconnect {

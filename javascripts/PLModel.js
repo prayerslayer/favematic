@@ -69,9 +69,22 @@ var PLModel = {
 		});
 	},
 	//pull some tracks
-	getFavorites: function(howmany) {
-		var ret = this.favorites.slice(this.offset, this.offset+howmany);
+	getNextFavorites: function(howmany) {
+		var diff = this.offset+howmany;
+		console.log(diff);
+		var ret;
+		//TODO check diff + howmany
+		ret = this.favorites.slice(this.offset, this.offset+howmany);
 		this.offset += howmany;
+		return ret;
+	},
+	getPreviousFavorites: function(howmany) {
+		this.offset -= howmany;
+		var diff = this.offset-howmany;
+		console.log(diff);
+		var ret;
+		//TODO check diff + howmany
+		ret = this.favorites.slice(this.offset-howmany, this.offset);
 		return ret;
 	}
 };

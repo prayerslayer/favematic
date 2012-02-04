@@ -17,12 +17,18 @@ var PLView = {
 	setTracks: function(tracks) {
 		var scope = this;
 		$(this.tracks).empty();
-		$.when($(tracks).each(function(idx, track) {
-			var div = $('<div class="favorite"><a class="track" href='+track.permalink_url+'>'+track.title+'</a></track>');
-			$(scope.tracks).append(div);
-		})).done(function() {
-			$(scope.tracks).SCPlaylist();
-			$(scope.div).removeClass("hidden");
+		$.when(
+			$(tracks).each(function(idx, track) {
+				var div = $('<div class="favorite"><a class="track" href='+track.permalink_url+'>'+track.title+'</a></track>');
+				$(scope.tracks).append(div);
+			})
+		).done(function() {
+			$.when(
+				$(scope.tracks).SCPlaylist()
+			)
+			.done(function() {
+				$(scope.div).removeClass("hidden")
+			});
 		});
 	}
 };

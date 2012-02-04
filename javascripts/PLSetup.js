@@ -13,18 +13,26 @@ $(document).ready(function() {
 			});				
 	});
 	//bindings
+
+	//tracks are collected
 	$(PLModel).bind("collected", function() {
-		PLController.showNext();
+		//TODO remove spinner
+		var tracks = PLModel.getNextFavorites(10);
+		PLView.setTracks(tracks);
 	});
+	//show username error
 	$(PLModel).bind("error_username", function() {
 		$("#user").addClass("error");
 	});
+	//show next tracks
 	$(PLView).bind("next", function() {
-		alert("next");
-		PLController.showNext();
+		var tracks = PLModel.getNextFavorites(10);
+		PLView.setTracks(tracks);
 	});
+	//show previous tracks
 	$(PLView).bind("previous", function() {
-		alert("prev");
+		var tracks = PLModel.getPreviousFavorites(10);
+		PLView.setTracks(tracks);
 	});
 });
 

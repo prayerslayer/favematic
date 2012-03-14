@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	PLModel.init();
 	PLView.init();
-	PLController.init();
+	//PLController.init();
 	//interactions
 	$("#set").click(function() {
 		$("#user").removeClass("error");
